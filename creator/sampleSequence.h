@@ -1,7 +1,8 @@
-#ifndef NUMBER_H
-#define NUMBER_H
+#pragma once
 
 #include<iostream>
+#include <vector>
+
 class Number{
     private:
     union Num {
@@ -54,4 +55,8 @@ class Number{
         return s << "Number("<<a.n.integer<<")";
     }
 };
-#endif
+class Sequence{
+    public:
+    virtual bool detect(std::vector<Number> &nums);
+    virtual Number term(long long int n);
+};
