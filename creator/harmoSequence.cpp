@@ -6,7 +6,7 @@ class HarmoSquence : public Sequence{
         Number d;
 
     public:
-    virtual bool detect(std::vector<Number> &nums) override {
+    virtual bool detect(std::vector<Number> &nums,std::vector<std::string> dlls) override {
         Number prev = nums[0].flip();
         Number next = nums[1].flip();
         d = next - prev;
@@ -21,6 +21,7 @@ class HarmoSquence : public Sequence{
         }
 
         a = nums[0];
+        type = "Harmonic with difference:" + d.toString();
         return true;
     }
 

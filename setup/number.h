@@ -20,6 +20,7 @@ class Number{
 
     double get();
     long long int getInt(unsigned short int points=0);
+    std::string toString();
     void reduce();
     Number flip();
 

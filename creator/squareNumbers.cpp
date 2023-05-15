@@ -1,6 +1,6 @@
 #include "sampleSequence.h"
 
-class ArthSequence : public Sequence {
+class SquareNumbers : public Sequence {
     private:
         Number a;
         Number d;
@@ -14,7 +14,6 @@ class ArthSequence : public Sequence {
             }
         }
         a = nums[0];
-        type = "Arthmetic with difference:" + d.toString();
         return true;
     }
 
@@ -24,5 +23,5 @@ class ArthSequence : public Sequence {
 };
 
 extern "C" __declspec(dllexport) Sequence* create() {
-    return new ArthSequence();
+    return new SquareNumbers();
 }

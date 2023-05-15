@@ -18,6 +18,7 @@ int main() {
 
     HINSTANCE dll;
     Sequence *s= getSequence(arr,dll);
+    std::cout<<"Type:"<<s->type<<std::endl;
     
     long long int term;
     std::cout<<"Term:";

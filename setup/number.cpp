@@ -28,6 +28,13 @@ long long int Number::getInt(unsigned short int points){
     }
     return n.integer;
 }
+std::string Number::toString(){
+    if (n.rational.isRational == 1) {
+        return std::to_string(n.rational.numerator) + "/" + std::to_string(n.rational.denominator);
+    } else {
+        return std::to_string(n.integer);
+    }
+}
 void Number::reduce(){
     if(n.rational.isRational==1){
         int gcd = std::gcd(n.rational.numerator,n.rational.denominator);

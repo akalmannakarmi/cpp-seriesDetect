@@ -21,6 +21,7 @@ class Number{
 
     double get();
     long long int getInt(unsigned short int points=0);
+    std::string toString();
     void reduce();
     Number flip();
 
@@ -57,6 +58,7 @@ class Number{
 };
 class Sequence{
     public:
-    virtual bool detect(std::vector<Number> &nums);
+    std::string type = "Unknown Type";
+    virtual bool detect(std::vector<Number> &nums,std::vector<std::string> dlls= {});
     virtual Number term(long long int n);
 };
