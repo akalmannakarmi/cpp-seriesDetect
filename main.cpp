@@ -1,8 +1,7 @@
 #include <windows.h>
 #include <sstream>
 #include <filesystem>
-#include "sequence.cpp"
-#include "number.cpp"
+#include "sampleSequence.h"
 
 std::vector<Number> stringToArray(std::string str);
 Sequence* getSequence(std::vector<Number> arr,HINSTANCE &dll);
@@ -61,13 +60,7 @@ Sequence* getSequence(std::vector<Number> arr,HINSTANCE &dll){
     for(const std::string& dllPath : dlls){
         dll = LoadLibrary(TEXT(dllPath.c_str()));
         if (dll == NULL) {
-            DWORD error = GetLastError();
-            LPSTR messageBuffer = nullptr;
-            size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                nullptr, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
-            std::string message(messageBuffer, size);
-            LocalFree(messageBuffer);
-            std::cerr << "Failed to load DLL '" << dllPath << "': " << message << std::endl;
+            FreeLibrary(dll);
             continue;
         }
         // Get a pointer to the CreateArthSequence function
