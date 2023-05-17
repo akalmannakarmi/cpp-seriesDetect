@@ -6,7 +6,7 @@ class GeoSequence : public Sequence{
         Number r;
     
     public:
-    virtual bool detect(std::vector<Number> &nums,std::vector<std::string> dlls) override{
+    virtual bool detect(std::vector<Number> &nums,std::vector<createSequence> &sequences) override{
         r = nums[1]/nums[0];
         for (int i = 2; i < nums.size(); i++) {
             if (nums[i]/nums[i-1]!=r){

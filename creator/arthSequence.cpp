@@ -6,7 +6,7 @@ class ArthSequence : public Sequence {
         Number d;
 
     public:
-    virtual bool detect(std::vector<Number>& nums,std::vector<std::string> dlls) override {
+    virtual bool detect(std::vector<Number> &nums,std::vector<createSequence> &sequences) override {
         d = nums[1] - nums[0];
         for (int i = 2; i < nums.size(); i++) {
             if (nums[i] - nums[i - 1] != d) {

@@ -3,10 +3,14 @@
 #include <filesystem>
 #include "sampleSequence.h"
 
-std::vector<Number> stringToArray(std::string str);
-Sequence* getSequence(std::vector<Number> arr,HINSTANCE &dll);
 typedef Sequence* (*createSequence)();
+std::vector<Number> stringToArray(std::string str);
+Sequence* getSequence(std::vector<Number> arr,std::vector<createSequence> &sequences);
+std::vector<createSequence> loadSequences(std::vector<HINSTANCE> &dlls);
 int main() {
+    std::vector<HINSTANCE> dlls;
+    std::vector<createSequence> sequences = loadSequences(dlls);
+
     std::string seriesStr;
     std::cout<<"Enter Series:";
     std::cin>>seriesStr;
@@ -16,8 +20,8 @@ int main() {
     }
     std::cout<<std::endl;
 
-    HINSTANCE dll;
-    Sequence *s= getSequence(arr,dll);
+
+    Sequence *s= getSequence(arr,sequences);
     std::cout<<"Type:"<<s->type<<std::endl;
     
     long long int term;
@@ -27,8 +31,9 @@ int main() {
 
     // Clean up
     delete s;
-    FreeLibrary(dll);
-
+    for(int i=0;dlls.size();i++){
+        FreeLibrary(dlls[i]);
+    }
     return 0;
 }
 
@@ -51,31 +56,35 @@ std::vector<Number> stringToArray(std::string str) {
     }
     return result;
 }
-Sequence* getSequence(std::vector<Number> arr,HINSTANCE &dll){
-    std::vector<std::string> dlls;
+std::vector<createSequence> loadSequences(std::vector<HINSTANCE> &dlls){
+    std::vector<createSequence> sequences;
     for (const auto& entry : std::filesystem::directory_iterator("sequences")) {
         if (entry.is_regular_file() && entry.path().extension() == ".dll") {
-            dlls.push_back(entry.path().string());
+            HINSTANCE dll = LoadLibrary(TEXT(entry.path().string().c_str()));
+            if (dll == NULL) {
+                std::cout << "Failed to load DLL: " << entry.path().string() << std::endl;
+                FreeLibrary(dll);
+                continue;
+            }
+            // Get a pointer to the CreateArthSequence function
+            createSequence create = (createSequence)GetProcAddress(dll, "create");
+            if (create == NULL) {
+                std::cout << "Failed to get function create() from DLL: " << entry.path().string() << std::endl;
+                FreeLibrary(dll);
+                continue;
+            }
+            sequences.push_back(create);
+            dlls.push_back(dll);
         }
     }
-    for(const std::string& dllPath : dlls){
-        dll = LoadLibrary(TEXT(dllPath.c_str()));
-        if (dll == NULL) {
-            FreeLibrary(dll);
-            continue;
-        }
-        // Get a pointer to the CreateArthSequence function
-        createSequence create = (createSequence)GetProcAddress(dll, "create");
-        if (create == NULL) {
-            FreeLibrary(dll);
-            continue;
-        }
-
-        // Create an ArthSequence object using the DLL function
-        Sequence* s = create();
-        if (s->detect(arr)){
+    return sequences;
+}
+Sequence* getSequence(std::vector<Number> arr,std::vector<createSequence> &sequences){
+    for(int i=0;i<sequences.size();i++){
+        Sequence* s = sequences[i]();
+        if (s->detect(arr,sequences))
             return s;
-        }
+        delete s;
     }
     return new Sequence();
 }

@@ -6,7 +6,7 @@ class HarmoSquence : public Sequence{
         Number d;
 
     public:
-    virtual bool detect(std::vector<Number> &nums,std::vector<std::string> dlls) override {
+    virtual bool detect(std::vector<Number> &nums,std::vector<createSequence> &sequences) override {
         Number prev = nums[0].flip();
         Number next = nums[1].flip();
         d = next - prev;
