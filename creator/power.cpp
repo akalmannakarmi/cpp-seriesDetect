@@ -1,11 +1,19 @@
 #include "sampleSequence.h"
-#include <windows.h>
+#include <iostream>
 #include <cmath>
+
+enum sqType{
+    POWER,
+    GEOBASE,
+    GEOPOWER,
+    ARTHBASE,
+    ARTHPOWER
+}
 
 class SquareNumbers : public Sequence {
     private:
-        Sequence *baseSeq=nullptr;
-        Sequence *powSeq=nullptr;
+        Number a;
+        sqType subType;
 
     public:
     ~SquareNumbers(){
@@ -17,29 +25,36 @@ class SquareNumbers : public Sequence {
         }
     }
 
-    virtual bool detect(std::vector<Number> &nums,std::vector<createSequence> &sequences) override {
-        std::vector<Number> bases;
-        std::vector<Number> expos;
-        double result;
-        bool found;
+    bool detectSquare(std::vector<Number> &nums){
         for (int i=0;i<nums.size();i++){
-            for (int base = 1; base<=nums[i].get(); base++) {
-                result=0;found=false;
-                for (int exponent = 0;  result >= nums[i].get(); exponent++) {
-                    result = pow(base, exponent);
-                    if (result == nums[i].get()) {
-                        bases.push_back(Number(base));
-                        expos.push_back(Number(exponent));
-                        found = true;break;
-                    }
-                }
-                if(!found)
-                    return false;
+            if(sqrt(nums[i])*sqrt(nums[i])!=nums[i]){
+                return false;
             }
         }
-        if(findSequence(baseSeq,sequences,bases) && findSequence(powSeq,sequences,expos))
-            type = "Power (Base:"+baseSeq->type+",Exponent:"+powSeq->type+")";
+        a=nums[0];
+        sqType = SQUARE;
+        type="Square Numbers Start:"+a.toString();
+        return true;
+    }
+    bool detectCube(std::vector<Number> &nums){
+        for (int i=0;i<nums.size();i++){
+            if(cbrt(nums[i])*cbrt(nums[i])!=nums[i]){
+                return false;
+            }
+        }
+        a=nums[0];
+        sqType = CUBE;
+        type="Cubic Numbers Start:"+a.toString();
+        return true;
+    }
+
+    virtual bool detect(std::vector<Number> &nums,std::vector<createSequence> &sequences) override {
+        if(detectSquare(nums)){
             return true;
+        }else if (detectCube(nums)){
+            return true;
+        }
+        
         return false;
     }
 
