@@ -2,6 +2,8 @@
 #include <sstream>
 #include <filesystem>
 #include "sampleSequence.h"
+// #include "number.cpp"
+// #include "sequence.cpp"
 
 typedef Sequence* (*createSequence)();
 std::vector<Number> stringToArray(std::string str);
@@ -20,8 +22,12 @@ int main() {
     }
     std::cout<<std::endl;
 
-
-    Sequence *s= getSequence(arr,sequences);
+    Sequence *s;
+    if(!s->findSequence(s,sequences,arr)){
+        std::cout<<"didnt find"<<std::endl;
+        return -1;
+    }
+    // Sequence *s= getSequence(arr,sequences);
     std::cout<<"Type:"<<s->type<<std::endl;
     
     long long int term;

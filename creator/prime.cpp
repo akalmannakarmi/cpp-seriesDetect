@@ -7,17 +7,17 @@ class primeSequence : public Sequence {
 
     public:
     bool isPrime(Number num) {
-        if (num < 2){
+        if (num <= 1)
             return false;
-        }
-        int sqrtNum = sqrt(num.get());
-        for (int i = 2; i <= sqrtNum; i++) {
-            if (num % i == 0){
+
+        for (int i = 2; i * i <= num.get(); ++i) {
+            if (num % i == 0)
                 return false;
-            }
         }
+
         return true;
     }
+
 
     virtual bool detect(std::vector<Number> &nums,std::vector<createSequence> &sequences) override {
         if(!isPrime(nums[0]))
@@ -41,18 +41,17 @@ class primeSequence : public Sequence {
     }
 
     virtual Number term(long long int n) override {
-        int count = 0;
-        Number currentTerm = a;
+        std::vector<Number> primes;
+        Number num = a;
 
-        while (count < n) {
-            if (isPrime(currentTerm)) {
-                count++;
-                if (count == n)
-                    return currentTerm;
+        while (primes.size() < n) {
+            if (isPrime(num)) {
+                primes.push_back(num);
             }
-            ++currentTerm;
+            ++num;
         }
-        return 0; // If no prime number found (should not happen)
+
+        return primes.back();
     }
 };
 
