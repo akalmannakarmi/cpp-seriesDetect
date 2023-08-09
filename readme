@@ -1,0 +1,3 @@
+* run `make pb`  to create build files
+* run `make` to build
+* run `make runner_`  to run

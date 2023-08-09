@@ -2,8 +2,8 @@
 #include <sstream>
 #include <filesystem>
 #include "sampleSequence.h"
-// #include "number.cpp"
-// #include "sequence.cpp"
+// #include "setup/number.cpp"
+// #include "setup/sequence.cpp"
 
 typedef Sequence* (*createSequence)();
 std::vector<Number> stringToArray(std::string str);
@@ -37,9 +37,10 @@ int main() {
 
     // Clean up
     delete s;
-    for(int i=0;dlls.size();i++){
+    for(int i=0;i<dlls.size();i++){
         FreeLibrary(dlls[i]);
     }
+    std::cout<<"Closing Safely"<<std::endl;
     return 0;
 }
 
